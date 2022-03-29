@@ -6,7 +6,7 @@ from torch_geometric.data import Data
 import pytorch_util as pu
 
 #thepath = '/home/hugo/experiment/gnn_power/acc/result/'
-#thepath = '/home/hugo/experiment/gnn_power/structure1/result/'
+#thepath = '/home/hugo/experiment/gnn_power/structure2/result/'
 thepath = './result/'
 casefile = 'case12da'
 matdata_file = thepath + casefile + '_data.mat'
@@ -104,7 +104,13 @@ class MLP(torch.nn.Module):
         return x
 
 
-model = MLP(hidden_channels=16).to(pu.device)
+# model = MLP(hidden_channels=16).to(pu.device)
+model = pu.build_mlp(input_size = data.num_nodes * data.node_feature, \
+                    output_size = y_row * y_col, \
+                    n_layers = 2, \
+                    size = 16, \
+                    activation = 'leaky_relu', \
+                    output_activation = 'identity').to(pu.device)
 print(model)
 #criterion = torch.nn.CrossEntropyLoss()  # Define loss criterion.
 criterion = torch.nn.MSELoss()  # Define loss criterion.
@@ -134,17 +140,24 @@ def train():
     optimizer.step()  # Update parameters based on gradients.
     return loss
 
-def test():
+def test(label_data_x, label_data_y):
     model.eval()
-    out = model(nn_x_test)
+    # out = model(nn_x_test)
+    out = model(label_data_x)
     # test_mse = (np.square(out - nn_y_test)).mean(axis=None) 
-    test_mse = criterion(out, nn_y_test) 
+    # test_mse = criterion(out, nn_y_test) 
+    test_mse = criterion(out, label_data_y) 
     return test_mse
 
 n_poch = 201
 for epoch in range(1, n_poch):
     loss = train()
-    print(f'Epoch: {epoch:03d}, Loss: {loss:.4f}')
+    train_acc = test(nn_x_train, nn_y_train)
+    test_acc = test(nn_x_test, nn_y_test)
 
-test_acc = test()
-print(f'Test Accuracy: {test_acc:.4f}')
+    # print(f'Epoch: {epoch:03d}, Loss: {loss:.4f}')
+    print(f'Epoch: {epoch:03d}, Train Acc: {train_acc:.4f}, Test Acc: {test_acc:.4f}')
+    
+
+#test_acc = test()
+#print(f'Test Accuracy: {test_acc:.4f}')
