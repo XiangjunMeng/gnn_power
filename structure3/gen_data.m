@@ -23,7 +23,8 @@ BUS_DEBUG = [BUS_I, BUS_TYPE, PD, QD];
 BRCH_DEBUG = [F_BUS, T_BUS, PF, QF, PT, QT];
 GEN_DEBUG = [GEN_BUS, PG, QG];
 
-casefile = 'case12da';
+% casefile = 'case12da';
+casefile = 'case38si';
 
 SAVERESULT = 1;
 DEBUG = 0;

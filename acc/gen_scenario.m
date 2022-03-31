@@ -4,7 +4,8 @@ clc;
 
 addpath(genpath('/home/hugo/source/matpower7.1'));
 
-casefile = 'case12da';
+%casefile = 'case12da';
+casefile = 'case38si';
 
 [PQ, PV, REF, NONE, BUS_I, BUS_TYPE, PD, QD, GS, BS, BUS_AREA, VM, ...
     VA, BASE_KV, ZONE, VMAX, VMIN, LAM_P, LAM_Q, MU_VMAX, MU_VMIN] = idx_bus;
@@ -50,7 +51,7 @@ default_row = [1, 1, CT_TBUS, 1, PD, CT_REL, 1];
 chgtab = repmat(default_row, npq * 2 * sample, 1);
 
 for loop0 = 1 : sample
-    fprintf('%d  \n', loop0);
+    % fprintf('%d  \n', loop0);
 
     starti = (loop0 - 1) * 2* npq + 1;
     mpccase = loadcase(casefile);

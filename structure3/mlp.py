@@ -8,7 +8,8 @@ import pytorch_util as pu
 #thepath = '/home/hugo/experiment/gnn_power/acc/result/'
 #thepath = '/home/hugo/experiment/gnn_power/structure2/result/'
 thepath = './result/'
-casefile = 'case12da'
+#casefile = 'case12da'
+casefile = 'case38si'
 matdata_file = thepath + casefile + '_data.mat'
 pu.init_gpu()
 
@@ -108,7 +109,7 @@ class MLP(torch.nn.Module):
 model = pu.build_mlp(input_size = data.num_nodes * data.node_feature, \
                     output_size = y_row * y_col, \
                     n_layers = 2, \
-                    size = 16, \
+                    size = 8, \
                     activation = 'leaky_relu', \
                     output_activation = 'identity').to(pu.device)
 print(model)

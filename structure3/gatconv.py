@@ -69,7 +69,7 @@ print(f'Data: {dataset[0]}')
 data = dataset[0]
 x_row, x_col = data.x.shape
 y_row, y_col = data.y.shape
-_, num_feature = data.edge_attr.shape
+_, num_edge_feature = data.edge_attr.shape
 
 print()
 #print(data)
@@ -102,8 +102,8 @@ class GAT(torch.nn.Module):
     def __init__(self, hidden_channels):
         super().__init__()
         torch.manual_seed(seed)
-        self.conv1 = GATConv(in_channels = x_col, out_channels = hidden_channels, edge_dim = num_feature)
-        self.conv2 = GATConv(in_channels = hidden_channels, out_channels = y_col, edge_dim = num_feature)
+        self.conv1 = GATConv(in_channels = x_col, out_channels = hidden_channels, edge_dim = num_edge_feature)
+        self.conv2 = GATConv(in_channels = hidden_channels, out_channels = y_col, edge_dim = num_edge_feature)
         self.lrelu = LeakyReLU()
 
     def forward(self, x, edge_index, edge_attr):
@@ -114,18 +114,18 @@ class GAT(torch.nn.Module):
         x = self.conv2(x, edge_index, edge_attr)
         return x
 
-model = GAT(hidden_channels=32).to(pu.device)
-'''
-model = pu.build_gnn( input_size = x_col, \
+#model = GAT(hidden_channels=8).to(pu.device)
+model = pu.build_gnn2( input_size = x_col, \
                     output_size = y_col, \
                     n_layers = 2, \
-                    size = 32, \
-                    input_args = 'x, edge_index', \
-                    gnn_layer_name = 'gcn', \
+                    size = 8, \
+                    edge_dim = num_edge_feature, \
+                    input_args = 'x, edge_index, edge_attr', \
+                    gnn_layer_name = 'gat', \
                     activation = 'leaky_relu', \
                     output_activation = 'identity' , \
 ).to(pu.device)
-'''
+
 print(model)
 
 #criterion = torch.nn.CrossEntropyLoss()  # Define loss criterion.
